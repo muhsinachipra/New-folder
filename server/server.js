@@ -1,16 +1,43 @@
+// server/server.js
+
 import express from 'express';
-import userRoutes from './routes/userRoutes.js'
+import http from 'http';
+import { Server } from 'socket.io';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import taskRoutes from './routes/taskRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const app = express()
-app.use(express.json())
+const app = express();
+const server = http.createServer(app);
 
-app.use('/api/user', userRoutes)
+const allowedOrigins = process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : '*';
 
-const PORT = process.env.PORT || 3000;
+const corsOptions = {
+    origin: allowedOrigins,
+    methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+const io = new Server(server, {
+    cors: {
+        origin: allowedOrigins,
+        methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],
+        credentials: true,
+    },
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
+
+app.use('/api/tasks', taskRoutes);
+app.use('/api/user', userRoutes);
 
 const connectDB = async () => {
     try {
@@ -23,6 +50,19 @@ const connectDB = async () => {
 };
 connectDB();
 
-app.listen(PORT, () => {
-    console.log('server started')
-})
+io.on('connection', (socket) => {
+    console.log('A user connected');
+    socket.on('someEvent', (data) => {
+        console.log('Data received:', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+export { io };
+
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
