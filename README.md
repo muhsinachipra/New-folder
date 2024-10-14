@@ -30,7 +30,7 @@ Follow these steps to set up the project on your local machine:
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/task-manager.git](https://github.com/muhsinachipra/taskCrudApp.git)
+git clone [https://github.com/muhsinachipra/taskCrudApp.git](https://github.com/muhsinachipra/taskCrudApp.git)
 cd task-manager
 ```
 
@@ -62,7 +62,7 @@ Create a `.env` file in the `server` directory and add the following environment
 
 ```bash
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/task-manager
+MONGO_URI=mongodb://localhost:27017/taskCrudApp
 JWT_SECRET=your_jwt_secret
 SOCKET_IO_URL=http://localhost:5000
 ```
