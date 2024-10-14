@@ -19,7 +19,7 @@ const Home = () => {
     const [taskStats, setTaskStats] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { logout } = useContext(AuthContext);
-    const [loadingTasks, setLoadingTasks] = useState(true); 
+    const [loadingTasks, setLoadingTasks] = useState(true);
     const [loadingStats, setLoadingStats] = useState(true);
 
     useEffect(() => {
@@ -52,14 +52,14 @@ const Home = () => {
 
         socket.on('taskCreated', (newTask) => {
             setTasks((prevTasks) => [...prevTasks, newTask]);
-            fetchStats(); 
+            fetchStats();
         });
 
         socket.on('taskUpdated', (updatedTask) => {
             setTasks((prevTasks) =>
                 prevTasks.map((task) => (task._id === updatedTask._id ? updatedTask : task))
             );
-            fetchStats(); 
+            fetchStats();
         });
 
         socket.on('taskDeleted', (deletedTaskId) => {
@@ -94,63 +94,63 @@ const Home = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            {/* Header Section */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-4xl font-bold text-gray-800">Task Manager</h1>
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg shadow"
-                >
-                    Logout
-                </button>
-            </div>
-    
-            {/* Add Task Button */}
-            <div className="flex justify-end mb-6">
-                <button
-                    onClick={handleAddTask}
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg shadow transition-transform transform hover:scale-105"
-                >
-                    Add Task
-                </button>
-            </div>
-    
-            {/* Layout for Task List and Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Task List */}
-                {loadingTasks ? (
-                    <div className="flex justify-center items-center col-span-1">
-                        <ClipLoader size={35} color={"#3498db"} loading={loadingTasks} />
-                    </div>
-                ) : (
-                    <TaskList tasks={tasks} onEdit={handleEdit} />
-                )}
-    
-                {/* Task Stats */}
-                {loadingStats ? (
-                    <div className="flex justify-center items-center col-span-1">
-                        <ClipLoader size={35} color={"#3498db"} loading={loadingStats} />
-                    </div>
-                ) : (
-                    taskStats && (
-                        <div className="mt-6 lg:mt-0">
-                            <TaskStats stats={taskStats} />
+        <div className="min-h-screen bg-gray-100">
+            <nav className="bg-white shadow-md">
+                <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+                    <h1 className="text-3xl font-bold text-gray-800">Task Manager</h1>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow transition duration-300 ease-in-out"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </nav>
+
+            <main className="container mx-auto px-6 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2">
+                        <div className="bg-white rounded-lg shadow-md p-6">
+                            <h2 className="text-2xl font-semibold mb-4">Task List</h2>
+                            {loadingTasks ? (
+                                <div className="flex justify-center items-center h-64">
+                                    <ClipLoader size={35} color={"#3498db"} loading={loadingTasks} />
+                                </div>
+                            ) : (
+                                <TaskList tasks={tasks} onEdit={handleEdit} onAddTask={handleAddTask} />
+                            )}
                         </div>
-                    )
-                )}
-            </div>
-    
-            {/* Modal */}
+                    </div>
+
+                    <div>
+                        <div className="bg-white rounded-lg shadow-md p-6">
+                            <h2 className="text-2xl font-semibold mb-4">Task Statistics</h2>
+                            {loadingStats ? (
+                                <div className="flex justify-center items-center h-64">
+                                    <ClipLoader size={35} color={"#3498db"} loading={loadingStats} />
+                                </div>
+                            ) : (
+                                taskStats && <TaskStats stats={taskStats} />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </main>
+
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60">
                     <div className="bg-white rounded-lg shadow-lg p-8 w-11/12 max-w-lg mx-auto">
-                        <button
-                            onClick={() => setIsModalOpen(false)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg float-right mb-4"
-                        >
-                            Close
-                        </button>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-semibold">{selectedTask ? 'Edit Task' : 'Add New Task'}</h2>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="text-gray-500 hover:text-gray-700"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                         <TaskForm selectedTask={selectedTask} onSave={handleSave} />
                     </div>
                 </div>

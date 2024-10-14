@@ -1,12 +1,10 @@
-// client/src/components/TaskList.jsx
-
 import { useState, useEffect } from 'react';
 import { updateTask, deleteTask, searchTasks } from '../api';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faCheck, faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const TaskList = ({ tasks, onEdit }) => {
+const TaskList = ({ tasks, onEdit, onAddTask }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredTasks, setFilteredTasks] = useState(tasks);
 
@@ -33,40 +31,54 @@ const TaskList = ({ tasks, onEdit }) => {
 
     return (
         <div>
-            <h1 className="text-2xl mb-4">Task List</h1>
-            <input
-                type="text"
-                placeholder="Search tasks..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="mb-4 w-full p-2 border"
-            />
-            <ul>
+            <div className="flex items-center mb-4 space-x-4">
+                <div className="flex-grow">
+                    <input
+                        type="text"
+                        placeholder="Search tasks..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+                <button
+                    onClick={onAddTask}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg shadow transition duration-300 ease-in-out flex items-center"
+                >
+                    <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                    Add Task
+                </button>
+            </div>
+            <ul className="space-y-4">
                 {filteredTasks.map((task) => (
-                    <li key={task._id} className="flex justify-between p-2 border-b">
-                        <div>
-                            {/* Toggle completion when clicking on task title */}
-                            <h3
-                                onClick={() => handleToggleComplete(task)}
-                                className={`text-xl cursor-pointer ${task.completed ? 'line-through' : ''}`}
-                            >
-                                {task.title}
-                            </h3>
-                            <p>{task.description}</p>
-                            {/* Display priority below the description */}
-                            <p className={`text-sm ${task.priority === 'High' ? 'text-red-500' : task.priority === 'Medium' ? 'text-yellow-500' : 'text-green-500'}`}>
-                                Priority: {task.priority}
-                            </p>
-                        </div>
-                        <div className="flex items-center">
-                            {/* Edit Icon */}
-                            <button onClick={() => onEdit(task)} className="mr-2 text-blue-500">
-                                <FontAwesomeIcon icon={faEdit} />
-                            </button>
-                            {/* Delete Icon */}
-                            <button onClick={() => handleDelete(task._id)} className="text-red-500">
-                                <FontAwesomeIcon icon={faTrash} />
-                            </button>
+                    <li key={task._id} className="bg-white rounded-lg shadow-md p-4 transition duration-300 ease-in-out hover:shadow-lg">
+                        <div className="flex justify-between items-start">
+                            <div className="flex-grow">
+                                <h3
+                                    onClick={() => handleToggleComplete(task)}
+                                    className={`text-xl font-semibold cursor-pointer ${task.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}
+                                >
+                                    {task.title}
+                                </h3>
+                                <p className="text-gray-600 mt-1">{task.description}</p>
+                                <span className={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded ${task.priority === 'High' ? 'bg-red-100 text-red-800' :
+                                    task.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-green-100 text-green-800'
+                                    }`}>
+                                    {task.priority}
+                                </span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <button onClick={() => handleToggleComplete(task)} className={`p-2 rounded-full ${task.completed ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'}`}>
+                                    <FontAwesomeIcon icon={task.completed ? faCheck : faTimes} />
+                                </button>
+                                <button onClick={() => onEdit(task)} className="p-2 rounded-full bg-blue-100 text-blue-600">
+                                    <FontAwesomeIcon icon={faEdit} />
+                                </button>
+                                <button onClick={() => handleDelete(task._id)} className="p-2 rounded-full bg-red-100 text-red-600">
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                            </div>
                         </div>
                     </li>
                 ))}
@@ -78,6 +90,7 @@ const TaskList = ({ tasks, onEdit }) => {
 TaskList.propTypes = {
     tasks: PropTypes.array.isRequired,
     onEdit: PropTypes.func.isRequired,
+    onAddTask: PropTypes.func.isRequired,
 };
 
 export default TaskList;
