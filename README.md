@@ -31,7 +31,7 @@ Follow these steps to set up the project on your local machine:
 
 ```bash
 git clone https://github.com/muhsinachipra/taskCrudApp.git
-cd task-manager
+cd taskCrudApp
 ```
 
 ### 2. Install Dependencies
