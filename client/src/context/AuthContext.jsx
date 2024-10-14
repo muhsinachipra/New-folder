@@ -3,7 +3,7 @@
 import { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export const AuthContext = createContext(); // Export AuthContext
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);

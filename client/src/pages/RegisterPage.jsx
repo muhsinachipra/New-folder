@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { ClipLoader } from 'react-spinners'; // Import the spinner
+import { ClipLoader } from 'react-spinners';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const RegisterPage = () => {
     });
 
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -30,19 +30,18 @@ const RegisterPage = () => {
             return;
         }
 
-        setLoading(true); // Start loading
-
+        setLoading(true);
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/user/register`, formData);
             navigate('/login');
         } catch (err) {
             if (err.response && err.response.data && err.response.data.error) {
-                setError(err.response.data.error); // Extract and set the error message from the response
+                setError(err.response.data.error);
             } else {
                 setError('Failed to register. Please try again.');
             }
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
         }
     };
 
@@ -93,11 +92,11 @@ const RegisterPage = () => {
                     <button
                         type="submit"
                         className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 relative" // Add relative positioning
-                        disabled={loading} // Disable button while loading
+                        disabled={loading}
                     >
                         {loading ? (
                             <div className="flex items-center justify-center">
-                                <ClipLoader loading={loading} size={20} color="#ffffff" /> {/* Spinner inside the button */}
+                                <ClipLoader loading={loading} size={20} color="#ffffff" />
                             </div>
                         ) : (
                             'Register'

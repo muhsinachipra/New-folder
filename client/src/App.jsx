@@ -1,15 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Register from "./pages/Register.jsx";
+// frontend\src\App.jsx
 
-export default function App() {
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ErrorBoundary from './components/ErrorBoundary';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
+
+function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Register />}>
-          {/* <Route index element={<Home />} /> */}
-          {/* <Route path="*" element={<NoPage />} /> */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <Router>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+          </Routes>
+        </ErrorBoundary>
+      </Router>
+    </AuthProvider>
   );
 }
+
+export default App;
