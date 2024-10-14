@@ -30,7 +30,7 @@ Follow these steps to set up the project on your local machine:
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/muhsinachipra/taskCrudApp.git](https://github.com/muhsinachipra/taskCrudApp.git)
+git clone https://github.com/muhsinachipra/taskCrudApp.git
 cd task-manager
 ```
 
